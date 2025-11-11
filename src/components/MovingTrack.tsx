@@ -1,17 +1,11 @@
-import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { Radio } from "lucide-react";
 
 interface Train {
   id: string;
   label: string;
   color: string;
   position: number;
-}
-
-interface ApproachingTrain {
-  id: string;
-  position: number;
-  color: string;
 }
 
 interface MovingTrackProps {
@@ -24,119 +18,77 @@ interface MovingTrackProps {
   onCollisionRisk?: (isRisk: boolean) => void;
 }
 
-export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, onSignalClick, onCollisionRisk }: MovingTrackProps) => {
-  const [trackOffset, setTrackOffset] = useState(0);
-  const [approachingTrains, setApproachingTrains] = useState<ApproachingTrain[]>([
-    { id: "approaching-1", position: direction === "forward" ? -20 : 120, color: "#ff3366" },
-    { id: "approaching-2", position: direction === "forward" ? -60 : 160, color: "#9333ea" },
-  ]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTrackOffset(prev => {
-        if (direction === "forward") {
-          return prev >= 100 ? 0 : prev + 0.5;
-        } else {
-          return prev <= -100 ? 0 : prev - 0.5;
-        }
-      });
-
-      // Move approaching trains
-      setApproachingTrains(prev => prev.map(t => {
-        let newPos;
-        if (direction === "forward") {
-          newPos = t.position >= 120 ? -20 : t.position + 0.8;
-        } else {
-          newPos = t.position <= -20 ? 120 : t.position - 0.8;
-        }
-        return { ...t, position: newPos };
-      }));
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [direction]);
-
-  // Check for collision risk
-  useEffect(() => {
-    const isRisk = approachingTrains.some(approaching => {
-      const distance = Math.abs(approaching.position - train.position);
-      return distance < 20;
-    });
-    onCollisionRisk?.(isRisk);
-  }, [approachingTrains, train.position, onCollisionRisk]);
+export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, onSignalClick }: MovingTrackProps) => {
+  // RFID sensor positions along the track
+  const trackLetter = name.includes("UP") ? "A" : name.includes("DOWN") ? "B" : "C";
+  const rfidSensors = [
+    { id: 1, position: 15, label: `RFID ${trackLetter}1` },
+    { id: 2, position: 30, label: direction === "forward" ? `RFID ${trackLetter}2` : "Wireless" },
+    { id: 3, position: 50, label: "Wireless" },
+    { id: 4, position: 70, label: direction === "forward" ? `RFID ${trackLetter}3` : `RFID ${trackLetter}3` },
+    { id: 5, position: 85, label: direction === "forward" ? `RFID ${trackLetter}4` : "BPC RFID" },
+  ];
 
   return (
     <div className="relative py-6 flex items-center gap-4">
-      {/* Track Label */}
-      <div className="min-w-[80px]">
+      {/* Track Name Label */}
+      <div className="min-w-[100px]">
         <span className="text-sm font-semibold text-foreground">{name}</span>
       </div>
-
-      {/* Left Signal Circle */}
+      {/* Left Traffic Signal */}
       <div 
-        className="cursor-pointer hover:scale-110 transition-transform z-30"
+        className="cursor-pointer hover:scale-110 transition-transform z-30 flex flex-col items-center gap-1"
         onClick={() => onSignalClick?.("left")}
       >
-        <div className={cn(
-          "w-10 h-10 rounded-full border-2 transition-all",
-          signalLeft === "safe" 
-            ? "bg-signal-safe border-signal-safe shadow-lg shadow-signal-safe/50" 
-            : signalLeft === "danger"
-            ? "bg-signal-stop border-signal-stop shadow-lg shadow-signal-stop/50"
-            : "bg-muted border-muted-foreground/40"
-        )} />
+        <div className="h-16 w-2 bg-muted-foreground/20" />
+        <div className="flex flex-col gap-1 bg-secondary/90 p-2 rounded border border-border">
+          <div className={cn(
+            "w-3 h-3 rounded-full border",
+            signalLeft === "danger" ? "bg-signal-stop border-signal-stop shadow-lg shadow-signal-stop/50" : "bg-muted/50 border-muted-foreground/30"
+          )} />
+          <div className={cn(
+            "w-3 h-3 rounded-full border",
+            signalLeft === "caution" ? "bg-accent border-accent shadow-lg shadow-accent/50" : "bg-muted/50 border-muted-foreground/30"
+          )} />
+          <div className={cn(
+            "w-3 h-3 rounded-full border",
+            signalLeft === "safe" ? "bg-signal-safe border-signal-safe shadow-lg shadow-signal-safe/50" : "bg-muted/50 border-muted-foreground/30"
+          )} />
+        </div>
       </div>
 
       {/* Track Container */}
-      <div className="flex-1 relative overflow-hidden">
-        <div className="h-3 bg-track rounded-full relative overflow-hidden">
-          {/* Moving track pattern */}
-          <div 
-            className="absolute inset-0 flex z-0"
-            style={{ 
-              transform: `translateX(${trackOffset}px)`,
-              transition: 'transform 0.05s linear'
-            }}
-          >
-            {/* Track dashes pattern */}
-            {Array.from({ length: 50 }).map((_, i) => (
-              <div 
-                key={i} 
-                className="h-1 w-6 bg-muted-foreground/30 mx-2 my-auto"
-                style={{ minWidth: '24px' }}
-              />
-            ))}
-          </div>
-
-          {/* Approaching Trains (moving with track) */}
-          {approachingTrains.map(approaching => (
+      <div className="flex-1 relative">
+        <div className="h-2 bg-track rounded-full relative">
+          {/* RFID Sensors */}
+          {rfidSensors.map(sensor => (
             <div
-              key={approaching.id}
-              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 z-10"
-              style={{ left: `${approaching.position}%` }}
+              key={sensor.id}
+              className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col items-center gap-1 z-10"
+              style={{ left: `${sensor.position}%` }}
             >
-              <div 
-                className="w-10 h-8 rounded-lg flex items-center justify-center shadow-lg opacity-70"
-                style={{ backgroundColor: approaching.color }}
-              >
-                <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M12 2c-4 0-8 0.5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v0.5h2l2-2h4l2 2h2v-0.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-4-4-8-4zM7.5 17c-0.83 0-1.5-0.67-1.5-1.5S6.67 14 7.5 14s1.5 0.67 1.5 1.5S8.33 17 7.5 17zm3.5-7H6V6h5v4zm2 0V6h5v4h-5zm3.5 7c-0.83 0-1.5-0.67-1.5-1.5s0.67-1.5 1.5-1.5 1.5 0.67 1.5 1.5-0.67 1.5-1.5 1.5z"/>
-                </svg>
+              <div className="flex flex-col items-center gap-0.5 bg-primary/90 px-2 py-1 rounded border border-primary shadow-lg shadow-primary/20">
+                <Radio className="w-3 h-3 text-white" />
               </div>
+              <span className="text-[10px] text-primary font-medium whitespace-nowrap">{sensor.label}</span>
+              <div className="w-px h-2 bg-muted-foreground/30" />
             </div>
           ))}
 
-          {/* Stationary Train (foreground) */}
+          {/* Stationary Train */}
           <div 
             className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-40"
             style={{ left: `${train.position}%` }}
           >
-            <div className="px-3 py-1 bg-card/90 rounded border border-border">
-              <span className="font-bold text-foreground text-sm">{train.label}</span>
+            <div className="px-3 py-1 bg-card/95 rounded border border-border shadow-lg">
+              <div className="flex flex-col items-center gap-0.5">
+                <span className="font-bold text-foreground text-sm whitespace-nowrap">{train.label}</span>
+                <span className="text-[10px] text-muted-foreground">Status: Active</span>
+              </div>
             </div>
             <div className="relative">
               <div 
-                className="w-14 h-12 rounded-lg flex items-center justify-center shadow-xl"
+                className="w-16 h-14 rounded-lg flex items-center justify-center shadow-2xl border-2 border-white/20"
                 style={{ backgroundColor: train.color }}
               >
                 <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -148,19 +100,26 @@ export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, o
         </div>
       </div>
 
-      {/* Right Signal Circle */}
+      {/* Right Traffic Signal */}
       <div 
-        className="cursor-pointer hover:scale-110 transition-transform z-30"
+        className="cursor-pointer hover:scale-110 transition-transform z-30 flex flex-col items-center gap-1"
         onClick={() => onSignalClick?.("right")}
       >
-        <div className={cn(
-          "w-10 h-10 rounded-full border-2 transition-all",
-          signalRight === "safe" 
-            ? "bg-signal-safe border-signal-safe shadow-lg shadow-signal-safe/50" 
-            : signalRight === "danger"
-            ? "bg-signal-stop border-signal-stop shadow-lg shadow-signal-stop/50"
-            : "bg-muted border-muted-foreground/40"
-        )} />
+        <div className="h-16 w-2 bg-muted-foreground/20" />
+        <div className="flex flex-col gap-1 bg-secondary/90 p-2 rounded border border-border">
+          <div className={cn(
+            "w-3 h-3 rounded-full border",
+            signalRight === "danger" ? "bg-signal-stop border-signal-stop shadow-lg shadow-signal-stop/50" : "bg-muted/50 border-muted-foreground/30"
+          )} />
+          <div className={cn(
+            "w-3 h-3 rounded-full border",
+            signalRight === "caution" ? "bg-accent border-accent shadow-lg shadow-accent/50" : "bg-muted/50 border-muted-foreground/30"
+          )} />
+          <div className={cn(
+            "w-3 h-3 rounded-full border",
+            signalRight === "safe" ? "bg-signal-safe border-signal-safe shadow-lg shadow-signal-safe/50" : "bg-muted/50 border-muted-foreground/30"
+          )} />
+        </div>
       </div>
     </div>
   );
