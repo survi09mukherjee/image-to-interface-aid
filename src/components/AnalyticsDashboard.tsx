@@ -25,21 +25,29 @@ export const AnalyticsDashboard = () => {
         ))}
       </div>
 
-      <div className="mt-6 space-y-3">
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">RFID Modules Active</span>
-          <span className="text-foreground font-semibold">8/8</span>
+      <div className="mt-6 grid grid-cols-2 gap-4">
+        {/* Signal Coverage - LEFT */}
+        <div className="p-4 bg-secondary/30 rounded-lg border border-border">
+          <div className="flex items-center justify-between text-sm mb-3">
+            <span className="text-muted-foreground font-medium">Signal Coverage</span>
+            <span className="text-foreground font-semibold">100%</span>
+          </div>
+          <div className="flex gap-2">
+            <button className="flex-1 h-8 rounded bg-destructive hover:bg-destructive/90 transition-colors" />
+            <button className="flex-1 h-8 rounded bg-signal-safe hover:bg-signal-safe/90 transition-colors" />
+          </div>
         </div>
-        <div className="h-2 bg-secondary rounded-full overflow-hidden">
-          <div className="h-full bg-signal-safe w-full rounded-full" />
-        </div>
-        
-        <div className="flex items-center justify-between text-sm">
-          <span className="text-muted-foreground">Signal Coverage</span>
-          <span className="text-foreground font-semibold">100%</span>
-        </div>
-        <div className="h-2 bg-secondary rounded-full overflow-hidden">
-          <div className="h-full bg-train-a w-full rounded-full" />
+
+        {/* Track Module - RIGHT */}
+        <div className="p-4 bg-secondary/30 rounded-lg border border-border">
+          <div className="flex items-center justify-between text-sm mb-3">
+            <span className="text-muted-foreground font-medium">Track Module</span>
+            <span className="text-foreground font-semibold">8/8</span>
+          </div>
+          <div className="flex gap-2">
+            <button className="flex-1 h-8 rounded bg-destructive hover:bg-destructive/90 transition-colors" />
+            <button className="flex-1 h-8 rounded bg-signal-safe hover:bg-signal-safe/90 transition-colors" />
+          </div>
         </div>
       </div>
     </Card>
