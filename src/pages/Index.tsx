@@ -148,7 +148,8 @@ const Index = () => {
             ]} 
           />
           <SignalStatus distance={2} />
-          <CollisionAlert isRisk={isCollisionRisk} />
+          <CollisionAlert isRisk={collisionRiskUp} trainLabel="TRAIN UP" />
+          <CollisionAlert isRisk={collisionRiskDown} trainLabel="TRAIN DOWN" />
           <Button
             onClick={() => setShowEmergencyDialog(true)}
             className="w-full h-16 text-lg font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg"

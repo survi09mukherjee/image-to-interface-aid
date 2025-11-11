@@ -28,23 +28,21 @@ export const AnalyticsDashboard = () => {
       <div className="mt-6 grid grid-cols-2 gap-4">
         {/* Signal Coverage - LEFT */}
         <div className="p-4 bg-secondary/30 rounded-lg border border-border">
-          <div className="text-sm mb-3">
+          <div className="text-sm mb-3 text-center">
             <span className="text-muted-foreground font-medium">Signal Coverage</span>
           </div>
-          <div className="flex gap-3 justify-center">
-            <button className="w-8 h-8 rounded-full bg-destructive hover:bg-destructive/90 transition-colors" />
-            <button className="w-8 h-8 rounded-full bg-signal-safe hover:bg-signal-safe/90 transition-colors" />
+          <div className="flex justify-center">
+            <button className="w-10 h-10 rounded-full bg-signal-safe hover:bg-signal-safe/90 transition-colors" />
           </div>
         </div>
 
         {/* Track Module - RIGHT */}
         <div className="p-4 bg-secondary/30 rounded-lg border border-border">
-          <div className="text-sm mb-3">
+          <div className="text-sm mb-3 text-center">
             <span className="text-muted-foreground font-medium">Track Module</span>
           </div>
-          <div className="flex gap-3 justify-center">
-            <button className="w-8 h-8 rounded-full bg-destructive hover:bg-destructive/90 transition-colors" />
-            <button className="w-8 h-8 rounded-full bg-signal-safe hover:bg-signal-safe/90 transition-colors" />
+          <div className="flex justify-center">
+            <button className="w-10 h-10 rounded-full bg-signal-safe hover:bg-signal-safe/90 transition-colors" />
           </div>
         </div>
       </div>
