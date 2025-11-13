@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import { Radio } from "lucide-react";
+import { useEffect, useState } from "react";
 
 interface Train {
   id: string;
@@ -18,33 +19,77 @@ interface MovingTrackProps {
   onCollisionRisk?: (isRisk: boolean) => void;
 }
 
-export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, onSignalClick }: MovingTrackProps) => {
+export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, onSignalClick, onCollisionRisk }: MovingTrackProps) => {
   const trackLetter = name.includes("UP") ? "A" : name.includes("DOWN") ? "B" : "C";
+  const [dynamicTrainPositions, setDynamicTrainPositions] = useState([20, 60, 130]);
   
-  // Moving background elements (pillars, stations, signals)
+  // Moving background elements (pillars, stations, traffic signals)
   const backgroundElements = [
-    { id: 1, position: 10, type: "pillar" },
-    { id: 2, position: 25, type: "station" },
-    { id: 3, position: 40, type: "pillar" },
-    { id: 4, position: 55, type: "signal" },
-    { id: 5, position: 70, type: "pillar" },
-    { id: 6, position: 85, type: "station" },
-    { id: 7, position: 100, type: "pillar" },
+    { id: 1, position: 5, type: "pillar" },
+    { id: 2, position: 15, type: "traffic-signal" },
+    { id: 3, position: 25, type: "station" },
+    { id: 4, position: 35, type: "traffic-signal" },
+    { id: 5, position: 45, type: "pillar" },
+    { id: 6, position: 55, type: "traffic-signal" },
+    { id: 7, position: 65, type: "pillar" },
+    { id: 8, position: 75, type: "station" },
+    { id: 9, position: 85, type: "traffic-signal" },
+    { id: 10, position: 95, type: "pillar" },
     // Duplicate for seamless loop
-    { id: 8, position: 110, type: "pillar" },
-    { id: 9, position: 125, type: "station" },
-    { id: 10, position: 140, type: "pillar" },
-    { id: 11, position: 155, type: "signal" },
-    { id: 12, position: 170, type: "pillar" },
-    { id: 13, position: 185, type: "station" },
+    { id: 11, position: 105, type: "pillar" },
+    { id: 12, position: 115, type: "traffic-signal" },
+    { id: 13, position: 125, type: "station" },
+    { id: 14, position: 135, type: "traffic-signal" },
+    { id: 15, position: 145, type: "pillar" },
+    { id: 16, position: 155, type: "traffic-signal" },
+    { id: 17, position: 165, type: "pillar" },
+    { id: 18, position: 175, type: "station" },
+    { id: 19, position: 185, type: "traffic-signal" },
   ];
 
   // Dynamic moving trains on the track
   const dynamicTrains = [
-    { id: "dyn1", position: 20, color: direction === "forward" ? "#10b981" : "#f59e0b", size: "small" },
-    { id: "dyn2", position: 60, color: direction === "forward" ? "#3b82f6" : "#ef4444", size: "medium" },
-    { id: "dyn3", position: 130, color: direction === "forward" ? "#8b5cf6" : "#06b6d4", size: "small" },
+    { id: "dyn1", position: dynamicTrainPositions[0], color: direction === "forward" ? "#10b981" : "#f59e0b", size: "small" },
+    { id: "dyn2", position: dynamicTrainPositions[1], color: direction === "forward" ? "#3b82f6" : "#ef4444", size: "medium" },
+    { id: "dyn3", position: dynamicTrainPositions[2], color: direction === "forward" ? "#8b5cf6" : "#06b6d4", size: "small" },
   ];
+
+  // Collision detection
+  useEffect(() => {
+    const checkCollision = () => {
+      const COLLISION_THRESHOLD = 15; // Distance threshold for collision risk
+      let hasRisk = false;
+
+      dynamicTrainPositions.forEach(dynPos => {
+        // Normalize positions to handle the 200% width track
+        const normalizedDynPos = dynPos % 100;
+        const distance = Math.abs(normalizedDynPos - train.position);
+        
+        if (distance < COLLISION_THRESHOLD) {
+          hasRisk = true;
+        }
+      });
+
+      onCollisionRisk?.(hasRisk);
+    };
+
+    const interval = setInterval(() => {
+      // Update dynamic train positions based on direction
+      setDynamicTrainPositions(prev => 
+        prev.map(pos => {
+          const speed = direction === "forward" ? 0.5 : -0.5;
+          const newPos = pos + speed;
+          // Reset position when reaching boundaries for continuous loop
+          if (newPos > 200) return newPos - 100;
+          if (newPos < 0) return newPos + 100;
+          return newPos;
+        })
+      );
+      checkCollision();
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [dynamicTrainPositions, train.position, direction, onCollisionRisk]);
 
   const animationClass = direction === "forward" ? "animate-track-forward" : "animate-track-backward";
 
@@ -103,10 +148,14 @@ export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, o
                     <div className="w-px h-4 bg-station/40" />
                   </div>
                 )}
-                {element.type === "signal" && (
-                  <div className="flex flex-col items-center gap-0.5">
-                    <Radio className="w-2 h-2 text-primary/70" />
-                    <div className="w-px h-3 bg-primary/30" />
+                {element.type === "traffic-signal" && (
+                  <div className="flex flex-col items-center gap-1">
+                    <div className="flex flex-col gap-0.5 bg-secondary/90 p-1 rounded border border-border">
+                      <div className="w-2 h-2 rounded-full bg-signal-stop/80 border border-signal-stop" />
+                      <div className="w-2 h-2 rounded-full bg-accent/80 border border-accent" />
+                      <div className="w-2 h-2 rounded-full bg-signal-safe/80 border border-signal-safe" />
+                    </div>
+                    <div className="w-px h-6 bg-muted-foreground/40" />
                   </div>
                 )}
               </div>
