@@ -97,20 +97,20 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground p-6">
+    <div className="h-screen w-screen bg-background text-foreground overflow-hidden flex flex-col p-3">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-center tracking-wider mb-2">
+      <div className="mb-3 flex-shrink-0">
+        <h1 className="text-xl font-bold text-center tracking-wider">
           SMART RAIL-TRACKING AND ANTI-COLLISION SYSTEM
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 max-w-[1800px] mx-auto">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-1 overflow-hidden min-h-0">
         {/* Main Track Visualization */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="lg:col-span-2 flex flex-col gap-2 overflow-hidden min-h-0">
           {/* Railway Tracks */}
-          <Card className="p-8 bg-card border-border">
-            <div className="space-y-6">
+          <Card className="p-4 bg-card border-border flex-shrink-0">
+            <div className="space-y-3">
               <MovingTrack
                 name="UP TRACK"
                 direction="forward"
@@ -133,14 +133,18 @@ const Index = () => {
           </Card>
 
           {/* Auto Signal Response */}
-          <AutoSignalResponse />
+          <div className="flex-shrink-0">
+            <AutoSignalResponse />
+          </div>
           
           {/* Analytics Dashboard */}
-          <AnalyticsDashboard />
+          <div className="flex-1 overflow-hidden min-h-0">
+            <AnalyticsDashboard />
+          </div>
         </div>
 
         {/* Right Sidebar - Metrics */}
-        <div className="space-y-4">
+        <div className="flex flex-col gap-2 overflow-y-auto">
           <SpeedDisplay 
             tracks={[
               { direction: "UP", speed: trains[0].speed, distance: trains[0].distance },
@@ -152,7 +156,7 @@ const Index = () => {
           <CollisionAlert isRisk={collisionRiskDown} trainLabel="TRAIN DOWN" />
           <Button
             onClick={() => setShowEmergencyDialog(true)}
-            className="w-full h-16 text-lg font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg"
+            className="w-full h-12 text-base font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg flex-shrink-0"
           >
             EMERGENCY STOP
           </Button>

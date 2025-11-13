@@ -94,32 +94,10 @@ export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, o
   const animationClass = direction === "forward" ? "animate-track-forward" : "animate-track-backward";
 
   return (
-    <div className="relative py-8 flex items-center gap-4">
+    <div className="relative py-4 flex items-center gap-4">
       {/* Track Name Label */}
       <div className="min-w-[100px]">
         <span className="text-sm font-semibold text-foreground">{name}</span>
-      </div>
-
-      {/* Left Traffic Signal */}
-      <div 
-        className="cursor-pointer hover:scale-110 transition-transform z-50 flex flex-col items-center gap-1"
-        onClick={() => onSignalClick?.("left")}
-      >
-        <div className="h-16 w-2 bg-muted-foreground/20" />
-        <div className="flex flex-col gap-1 bg-secondary/90 p-2 rounded border border-border">
-          <div className={cn(
-            "w-3 h-3 rounded-full border",
-            signalLeft === "danger" ? "bg-signal-stop border-signal-stop shadow-lg shadow-signal-stop/50" : "bg-muted/50 border-muted-foreground/30"
-          )} />
-          <div className={cn(
-            "w-3 h-3 rounded-full border",
-            signalLeft === "caution" ? "bg-accent border-accent shadow-lg shadow-accent/50" : "bg-muted/50 border-muted-foreground/30"
-          )} />
-          <div className={cn(
-            "w-3 h-3 rounded-full border",
-            signalLeft === "safe" ? "bg-signal-safe border-signal-safe shadow-lg shadow-signal-safe/50" : "bg-muted/50 border-muted-foreground/30"
-          )} />
-        </div>
       </div>
 
       {/* Track Container with Moving Background */}
@@ -205,28 +183,6 @@ export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, o
               </svg>
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Right Traffic Signal */}
-      <div 
-        className="cursor-pointer hover:scale-110 transition-transform z-50 flex flex-col items-center gap-1"
-        onClick={() => onSignalClick?.("right")}
-      >
-        <div className="h-16 w-2 bg-muted-foreground/20" />
-        <div className="flex flex-col gap-1 bg-secondary/90 p-2 rounded border border-border">
-          <div className={cn(
-            "w-3 h-3 rounded-full border",
-            signalRight === "danger" ? "bg-signal-stop border-signal-stop shadow-lg shadow-signal-stop/50" : "bg-muted/50 border-muted-foreground/30"
-          )} />
-          <div className={cn(
-            "w-3 h-3 rounded-full border",
-            signalRight === "caution" ? "bg-accent border-accent shadow-lg shadow-accent/50" : "bg-muted/50 border-muted-foreground/30"
-          )} />
-          <div className={cn(
-            "w-3 h-3 rounded-full border",
-            signalRight === "safe" ? "bg-signal-safe border-signal-safe shadow-lg shadow-signal-safe/50" : "bg-muted/50 border-muted-foreground/30"
-          )} />
         </div>
       </div>
     </div>
