@@ -104,13 +104,11 @@ export const MovingTrack = ({ name, direction, train, signalLeft, signalRight, o
       <div className="flex-1 relative overflow-hidden h-24">
         {/* Moving Background Layer */}
         <div className={cn("absolute inset-0 flex items-center", animationClass)}>
-          {/* Duplicate track rail for seamless loop */}
-          <div className="absolute inset-0 flex">
-            <div className="h-3 bg-track rounded-full" style={{ width: "100%" }} />
-            <div className="h-3 bg-track rounded-full" style={{ width: "100%" }} />
-          </div>
-          
-          <div className="relative h-3" style={{ width: "200%" }}>
+          <div className="relative h-3 flex" style={{ width: "200%" }}>
+            {/* First track segment */}
+            <div className="absolute h-3 bg-track rounded-full" style={{ width: "50%", left: "0%" }} />
+            {/* Second track segment for seamless loop */}
+            <div className="absolute h-3 bg-track rounded-full" style={{ width: "50%", left: "50%" }} />
             {/* Background Elements Moving with Track */}
             {backgroundElements.map(element => (
               <div
