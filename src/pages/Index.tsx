@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { MovingTrack } from "@/components/MovingTrack";
 import { SpeedDisplay } from "@/components/SpeedDisplay";
 import { SignalStatus } from "@/components/SignalStatus";
-import { AutoSignalResponse } from "@/components/AutoSignalResponse";
+
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { CollisionAlert } from "@/components/CollisionAlert";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
@@ -132,11 +132,6 @@ const Index = () => {
             </div>
           </Card>
 
-          {/* Auto Signal Response */}
-          <div className="flex-shrink-0">
-            <AutoSignalResponse />
-          </div>
-          
           {/* Analytics Dashboard */}
           <div className="flex-1 overflow-hidden min-h-0">
             <AnalyticsDashboard />
