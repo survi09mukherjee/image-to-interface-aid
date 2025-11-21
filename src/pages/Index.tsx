@@ -293,21 +293,6 @@ const Index = () => {
         </h1>
       </div>
 
-      {/* Quick Actions */}
-      <div className="mb-2 flex-shrink-0">
-        <Card className="p-2 bg-card border-border">
-          <div className="flex items-center justify-between gap-4">
-            <h2 className="text-sm font-semibold text-muted-foreground">QUICK ACTIONS</h2>
-            <Button
-              onClick={() => setShowEmergencyDialog(true)}
-              className="h-9 px-6 text-sm font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg"
-            >
-              EMERGENCY STOP
-            </Button>
-          </div>
-        </Card>
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 flex-1 overflow-hidden min-h-0">
         {/* Main Track Visualization */}
         <div className="lg:col-span-2 flex flex-col gap-1 overflow-hidden min-h-0">
@@ -390,6 +375,7 @@ const Index = () => {
 
           {/* Previous & Next Train Details */}
           <Card className="p-1.5 bg-card border-border space-y-1.5">
+            <h2 className="text-xs font-semibold text-muted-foreground">TRAIN SCHEDULE</h2>
             <div className="grid grid-cols-2 gap-1.5">
               <div className="bg-muted/50 p-1.5 rounded-md">
                 <p className="text-[10px] text-muted-foreground mb-0.5">Previous Train</p>
@@ -417,6 +403,13 @@ const Index = () => {
               </div>
             </div>
           </Card>
+
+          <Button
+            onClick={() => setShowEmergencyDialog(true)}
+            className="w-full h-9 text-sm font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg"
+          >
+            EMERGENCY STOP
+          </Button>
         </div >
       </div >
 
