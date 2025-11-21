@@ -151,7 +151,7 @@ const Index = () => {
           </Card>
 
           {/* Analytics Dashboard */}
-          <div className="flex-1 overflow-hidden min-h-0 flex flex-col gap-2">
+          <div className="flex-1 overflow-hidden min-h-0 flex flex-col">
             <div className="flex-1 overflow-hidden min-h-0">
               <AnalyticsDashboard />
             </div>

@@ -36,14 +36,14 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
   ];
 
   return (
-    <div className="relative py-4 flex items-center gap-4">
+    <div className="relative py-8 flex items-center gap-4">
       {/* Track Name Label */}
       <div className="min-w-[100px]">
         <span className="text-sm font-semibold text-foreground">{name}</span>
       </div>
 
       {/* Track Container - Static (No Animation) - Zoomed Out */}
-      <div className="flex-1 relative overflow-hidden h-16 scale-90">
+      <div className="flex-1 relative overflow-hidden h-32">
         {/* Static Background Layer */}
         <div className="absolute inset-0 flex items-center">
           <div className="relative h-3 w-full">
