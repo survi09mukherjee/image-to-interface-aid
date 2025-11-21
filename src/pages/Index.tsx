@@ -39,6 +39,14 @@ const Index = () => {
     { id: "train-a", label: "UP TRAIN (Locopilot)", color: "#00d4ff", position: 30, speed: 0, distance: 5 },
     { id: "train-b", label: "DOWN TRAIN", color: "#ff9500", position: 70, speed: 0, distance: 5 },
   ]);
+
+  // Calculate if trains are approaching or moving away
+  // When hardware updates positions, this will show real-time status
+  const getTrainStatus = (trainA: TrainState, trainB: TrainState): "Approaching" | "Moving Away" => {
+    // If distance is decreasing, trains are approaching
+    // Hardware will update this based on real-time position changes
+    return trainA.distance <= 3 ? "Approaching" : "Moving Away";
+  };
   
   const [signals, setSignals] = useState<Record<string, SignalState>>({
     "track-up": { left: "safe", right: "safe" },
@@ -125,7 +133,10 @@ const Index = () => {
               <MovingTrack
                 name="UP TRACK"
                 direction="forward"
-                train={trains[0]}
+                mainTrain={trains[0]}
+                backTrain={{ ...trains[0], position: Math.max(0, trains[0].position - 15), label: "UP-BACK" }}
+                frontTrain={{ ...trains[0], position: Math.min(100, trains[0].position + 15), label: "UP-FRONT" }}
+                status={getTrainStatus(trains[0], trains[1])}
                 signalLeft={signals["track-up"].left}
                 signalRight={signals["track-up"].right}
                 onSignalClick={(side) => handleSignalClick("track-up", side)}
@@ -133,7 +144,10 @@ const Index = () => {
               <MovingTrack
                 name="DOWN TRACK"
                 direction="backward"
-                train={trains[1]}
+                mainTrain={trains[1]}
+                backTrain={{ ...trains[1], position: Math.min(100, trains[1].position + 15), label: "DOWN-BACK" }}
+                frontTrain={{ ...trains[1], position: Math.max(0, trains[1].position - 15), label: "DOWN-FRONT" }}
+                status={getTrainStatus(trains[1], trains[0])}
                 signalLeft={signals["track-down"].left}
                 signalRight={signals["track-down"].right}
                 onSignalClick={(side) => handleSignalClick("track-down", side)}
