@@ -28,19 +28,29 @@ interface SignalState {
 const Index = () => {
   const [showEmergencyDialog, setShowEmergencyDialog] = useState(false);
   const [selectedTrain, setSelectedTrain] = useState<string | null>(null);
-  const [collisionRiskUp, setCollisionRiskUp] = useState(false);
-  const [collisionRiskDown, setCollisionRiskDown] = useState(false);
   
+  // Train data - THIS WILL BE UPDATED FROM HARDWARE CONNECTION
+  // Distance is in kilometers (km)
+  // When hardware is connected, update these values with real-time data:
+  // - position: train position on track (0-100%)
+  // - speed: train speed in km/h
+  // - distance: distance between trains in kilometers
   const [trains, setTrains] = useState<TrainState[]>([
-    { id: "train-a", label: "UP TRAIN", color: "#00d4ff", position: 50, speed: 72, distance: 3 },
-    { id: "train-b", label: "DOWN TRAIN", color: "#ff9500", position: 50, speed: 60, distance: 5 },
+    { id: "train-a", label: "UP TRAIN (Locopilot)", color: "#00d4ff", position: 30, speed: 0, distance: 5 },
+    { id: "train-b", label: "DOWN TRAIN", color: "#ff9500", position: 70, speed: 0, distance: 5 },
   ]);
   
   const [signals, setSignals] = useState<Record<string, SignalState>>({
     "track-up": { left: "safe", right: "safe" },
-    "track-down": { left: "safe", right: "caution" },
+    "track-down": { left: "safe", right: "safe" },
   });
 
+  // COLLISION DETECTION LOGIC
+  // Alert triggers when trains are within 1 km of each other
+  // Hardware should update the 'distance' field in trains array
+  const COLLISION_THRESHOLD_KM = 1;
+  const collisionRiskUp = trains[0].distance <= COLLISION_THRESHOLD_KM;
+  const collisionRiskDown = trains[1].distance <= COLLISION_THRESHOLD_KM;
   const isCollisionRisk = collisionRiskUp || collisionRiskDown;
 
 
@@ -119,7 +129,6 @@ const Index = () => {
                 signalLeft={signals["track-up"].left}
                 signalRight={signals["track-up"].right}
                 onSignalClick={(side) => handleSignalClick("track-up", side)}
-                onCollisionRisk={setCollisionRiskUp}
               />
               <MovingTrack
                 name="DOWN TRACK"
@@ -128,7 +137,6 @@ const Index = () => {
                 signalLeft={signals["track-down"].left}
                 signalRight={signals["track-down"].right}
                 onSignalClick={(side) => handleSignalClick("track-down", side)}
-                onCollisionRisk={setCollisionRiskDown}
               />
             </div>
           </Card>
@@ -148,9 +156,9 @@ const Index = () => {
             ]} 
           />
           <WeatherTime />
-          <SignalStatus distance={2} />
-          <CollisionAlert isRisk={collisionRiskUp} trainLabel="TRAIN UP" />
-          <CollisionAlert isRisk={collisionRiskDown} trainLabel="TRAIN DOWN" />
+          <SignalStatus distance={trains[0].distance < trains[1].distance ? trains[0].distance : trains[1].distance} />
+          <CollisionAlert isRisk={collisionRiskUp} trainLabel="UP TRAIN (LOCOPILOT)" />
+          <CollisionAlert isRisk={collisionRiskDown} trainLabel="DOWN TRAIN" />
           <Button
             onClick={() => setShowEmergencyDialog(true)}
             className="w-full h-9 text-sm font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg flex-shrink-0"

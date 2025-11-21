@@ -38,11 +38,11 @@ export const CollisionAlert = ({ isRisk, trainLabel }: CollisionAlertProps) => {
             "text-sm font-bold tracking-wide",
             isRisk ? "text-signal-stop" : "text-signal-safe"
           )}>
-            {isRisk ? "⚠️ COLLISION RISK" : "✓ ALL CLEAR"}
+            {isRisk ? "⚠️ COLLISION RISK (<1km)" : "✓ ALL CLEAR"}
           </div>
           <div className="text-[10px] text-muted-foreground truncate">
             {isRisk 
-              ? "Approaching train in danger zone" 
+              ? "Trains within 1km - Emergency alert" 
               : "Safe distance maintained"}
           </div>
         </div>
