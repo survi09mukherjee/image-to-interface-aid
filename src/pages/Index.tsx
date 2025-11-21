@@ -197,12 +197,15 @@ const Index = () => {
 
   // COLLISION DETECTION LOGIC
   // Alert triggers when trains are within 1 km of each other
-  // Hardware should update the 'distance' field in trains array
+  // Calculate actual distance between trains based on their positions
   const COLLISION_THRESHOLD_KM = 1;
-  const collisionRiskUp = trains[0].distance <= COLLISION_THRESHOLD_KM;
-  const collisionRiskDown = trains[1].distance <= COLLISION_THRESHOLD_KM;
 
-  const isCollisionRisk = collisionRiskUp || collisionRiskDown;
+  // Calculate distance between train positions (position is 0-100, representing track percentage)
+  // Assuming 10% = 1km scale, so distance in km = |position difference| / 10
+  const distanceBetweenTrains = Math.abs(trains[0].position - trains[1].position) / 10;
+
+  // Only trigger collision risk if trains are actually close to each other
+  const isCollisionRisk = distanceBetweenTrains <= COLLISION_THRESHOLD_KM;
 
   // Dashboard Metrics Calculation
   const avgSpeed = Math.round(trains.reduce((acc, curr) => acc + curr.speed, 0) / trains.length) || 0;
