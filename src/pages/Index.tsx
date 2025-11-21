@@ -286,8 +286,8 @@ const Index = () => {
         {/* Main Track Visualization */}
         <div className="lg:col-span-2 flex flex-col gap-1 overflow-hidden min-h-0">
           {/* Railway Tracks */}
-          <Card className="p-2 bg-card border-border flex-shrink-0">
-            <div className="space-y-3">
+          <Card className="p-2 bg-card border-border flex-1 overflow-hidden flex flex-col">
+            <div className="space-y-3 flex-1 h-full">
               <MovingTrack
                 name="MAIN TRACK"
                 direction="forward"
@@ -332,94 +332,64 @@ const Index = () => {
           </Card>
 
           {/* Analytics Dashboard */}
-          <div className="flex-1 overflow-hidden min-h-0">
+          <div className="flex-shrink-0 overflow-hidden min-h-0">
             <AnalyticsDashboard />
+            <div className="mt-1 mb-1">
+              <SignalStatus
+                distance={trains[0].distance < trains[1].distance ? trains[0].distance : trains[1].distance}
+                status={signals["track-up"].left}
+              />
+            </div>
             <Button
               onClick={() => setShowEmergencyDialog(true)}
-              className="w-full h-9 text-sm font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg flex-shrink-0 mt-2"
+              className="w-full h-9 text-sm font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg flex-shrink-0"
             >
               EMERGENCY STOP
             </Button>
           </div>
         </div>
 
-        {/* Right Sidebar - Metrics */}
-        <div className="flex flex-col gap-1.5 overflow-hidden">
-          <SpeedDisplay
-            tracks={[
-              { direction: "UP", speed: 45, distance: 5 }, // Approaching
-              { direction: "DOWN", speed: 60, distance: 1 }, // Departing
-            ]}
-          />
-          <WeatherTime locationName={stations[0].name} />
-          <CollisionAlert isRisk={collisionRiskUp} trainLabel="MAIN TRAIN" />
-          <CollisionAlert isRisk={collisionRiskUp} trainLabel="MAIN TRAIN" />
-          <SignalStatus
-            distance={trains[0].distance < trains[1].distance ? trains[0].distance : trains[1].distance}
-            status={signals["track-up"].left}
-          />
+        <p className="text-[10px] font-mono leading-none opacity-80">{nextTrain.number}</p>
+        <p className="text-[10px] text-blue-500 font-medium mt-0.5">ETA: {nextTrain.eta}</p>
+      </>
+      ) : (
+      <p className="text-[10px] italic">Loading...</p>
+        )}
+    </div>
+    </div >
+          </Card >
+        </div >
+      </div >
 
-          {/* Previous & Next Train Details */}
-          <Card className="p-1.5 bg-card border-border space-y-1.5">
-            <div className="grid grid-cols-2 gap-1.5">
-              <div className="bg-muted/50 p-1.5 rounded-md">
-                <p className="text-[10px] text-muted-foreground mb-0.5">Previous Train</p>
-                {previousTrain ? (
-                  <>
-                    <p className="font-bold text-xs truncate">{previousTrain.name}</p>
-                    <p className="text-[10px] font-mono leading-none opacity-80">{previousTrain.number}</p>
-                    <p className="text-[10px] text-green-500 font-medium mt-0.5">{previousTrain.status}</p>
-                  </>
-                ) : (
-                  <p className="text-[10px] italic">Loading...</p>
-                )}
-              </div>
-              <div className="bg-muted/50 p-1.5 rounded-md">
-                <p className="text-[10px] text-muted-foreground mb-0.5">Next Train</p>
-                {nextTrain ? (
-                  <>
-                    <p className="font-bold text-xs truncate">{nextTrain.name}</p>
-                    <p className="text-[10px] font-mono leading-none opacity-80">{nextTrain.number}</p>
-                    <p className="text-[10px] text-blue-500 font-medium mt-0.5">ETA: {nextTrain.eta}</p>
-                  </>
-                ) : (
-                  <p className="text-[10px] italic">Loading...</p>
-                )}
-              </div>
-            </div>
-          </Card>
-        </div>
+  {/* Emergency Stop Dialog */ }
+  < AlertDialog open = { showEmergencyDialog } onOpenChange = { setShowEmergencyDialog } >
+    <AlertDialogContent>
+      <AlertDialogHeader>
+        <AlertDialogTitle>Select Train to Stop</AlertDialogTitle>
+        <AlertDialogDescription>
+          Choose which train should execute emergency stop procedure.
+        </AlertDialogDescription>
+      </AlertDialogHeader>
+      <div className="space-y-3 my-4">
+        {trains.slice(0, 1).map((train) => (
+          <Button
+            key={train.id}
+            onClick={() => {
+              setSelectedTrain(train.id);
+              handleEmergencyStop(train.id);
+            }}
+            className="w-full h-12 text-lg font-semibold"
+            style={{ backgroundColor: train.color }}
+          >
+            {train.label} - {train.speed} km/h
+          </Button>
+        ))}
       </div>
-
-      {/* Emergency Stop Dialog */}
-      <AlertDialog open={showEmergencyDialog} onOpenChange={setShowEmergencyDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Select Train to Stop</AlertDialogTitle>
-            <AlertDialogDescription>
-              Choose which train should execute emergency stop procedure.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <div className="space-y-3 my-4">
-            {trains.slice(0, 1).map((train) => (
-              <Button
-                key={train.id}
-                onClick={() => {
-                  setSelectedTrain(train.id);
-                  handleEmergencyStop(train.id);
-                }}
-                className="w-full h-12 text-lg font-semibold"
-                style={{ backgroundColor: train.color }}
-              >
-                {train.label} - {train.speed} km/h
-              </Button>
-            ))}
-          </div>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+      <AlertDialogFooter>
+        <AlertDialogCancel>Cancel</AlertDialogCancel>
+      </AlertDialogFooter>
+    </AlertDialogContent>
+      </AlertDialog >
     </div >
   );
 };
