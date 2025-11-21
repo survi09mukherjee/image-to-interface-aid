@@ -111,10 +111,10 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
                   {Math.abs(train.position - mainTrain.position) > 0 ? `${Math.abs((train.position - mainTrain.position) / 10).toFixed(1)} km` : ''}
                 </span>
                 {train.stationName && (
-                  <span className="text-[8px] text-muted-foreground whitespace-nowrap">{train.stationName}</span>
+                  <span className="text-[9px] font-medium text-muted-foreground whitespace-nowrap">{train.stationName}</span>
                 )}
                 {train.latitude && (
-                  <span className="text-[7px] text-muted-foreground whitespace-nowrap">
+                  <span className="text-[8px] text-muted-foreground/80 whitespace-nowrap">
                     {train.latitude.toFixed(3)}°N, {train.longitude?.toFixed(3)}°E
                   </span>
                 )}
@@ -131,9 +131,9 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
           <div className="px-3 py-1 bg-card/95 rounded border border-border shadow-lg">
             <div className="flex flex-col items-center gap-0.5">
               <span className="font-bold text-foreground text-sm whitespace-nowrap">{mainTrain.label}</span>
-              <div className="flex flex-col items-center text-[9px] text-muted-foreground">
+              <div className="flex flex-col items-center text-[10px] font-medium text-muted-foreground">
                 <span>{mainTrain.stationName}</span>
-                <span>{mainTrain.latitude?.toFixed(3)}°N, {mainTrain.longitude?.toFixed(3)}°E</span>
+                <span className="text-[9px] opacity-80">{mainTrain.latitude?.toFixed(3)}°N, {mainTrain.longitude?.toFixed(3)}°E</span>
               </div>
             </div>
           </div>

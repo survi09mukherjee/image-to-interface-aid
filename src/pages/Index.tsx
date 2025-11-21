@@ -206,7 +206,7 @@ const Index = () => {
               { direction: "UP", speed: trains[0].speed, distance: trains[0].distance },
             ]}
           />
-          <WeatherTime />
+          <WeatherTime locationName={stations[0].name} />
           <CollisionAlert isRisk={collisionRiskUp} trainLabel="MAIN TRAIN" />
           <SignalStatus distance={trains[0].distance < trains[1].distance ? trains[0].distance : trains[1].distance} />
           <Button

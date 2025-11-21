@@ -2,23 +2,25 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Cloud, Sun, CloudRain, MapPin, Clock } from "lucide-react";
 import { useState, useEffect } from "react";
 
-export const WeatherTime = () => {
+interface WeatherTimeProps {
+  locationName?: string;
+}
+
+export const WeatherTime = ({ locationName = "Coimbatore Junction" }: WeatherTimeProps) => {
   const [currentTime, setCurrentTime] = useState(new Date());
-  
+
   // Update time every second
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-    
+
     return () => clearInterval(timer);
   }, []);
 
-  // Mock location data - in a real app, this would come from train GPS
-  const location = "Mumbai Central";
   const weather = "Partly Cloudy" as const;
   const temperature = 28;
-  
+
   const getWeatherIcon = (weatherType: string) => {
     if (weatherType === "Sunny") {
       return <Sun className="w-8 h-8 text-accent" />;
@@ -41,9 +43,9 @@ export const WeatherTime = () => {
         {/* Location */}
         <div className="flex items-center justify-between">
           <span className="text-xs text-muted-foreground">Location</span>
-          <span className="text-sm font-medium">{location}</span>
+          <span className="text-sm font-medium">{locationName}</span>
         </div>
-        
+
         {/* Weather */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
@@ -54,7 +56,7 @@ export const WeatherTime = () => {
             </div>
           </div>
         </div>
-        
+
         {/* Time */}
         <div className="flex items-center justify-between pt-2 border-t border-border">
           <span className="text-xs text-muted-foreground flex items-center gap-1">
@@ -62,11 +64,11 @@ export const WeatherTime = () => {
             Current Time
           </span>
           <span className="text-sm font-medium font-mono">
-            {currentTime.toLocaleTimeString('en-IN', { 
-              hour: '2-digit', 
+            {currentTime.toLocaleTimeString('en-IN', {
+              hour: '2-digit',
               minute: '2-digit',
               second: '2-digit',
-              hour12: true 
+              hour12: true
             })}
           </span>
         </div>
