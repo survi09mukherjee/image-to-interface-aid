@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { MovingTrack } from "@/components/MovingTrack";
 import { SpeedDisplay } from "@/components/SpeedDisplay";
 import { SignalStatus } from "@/components/SignalStatus";
-
+import { Train } from "lucide-react";
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { CollisionAlert } from "@/components/CollisionAlert";
 import { WeatherTime } from "@/components/WeatherTime";
@@ -280,55 +280,78 @@ const Index = () => {
         description: `${train.label} has been brought to a complete stop safely.`,
       });
       setSelectedTrain(null);
-      <div className="space-y-3 flex-1">
-        <MovingTrack
-          name="MAIN TRACK"
-          direction="forward"
-          mainTrain={{
-            ...trains[0],
-            position: 50,
-            latitude: currentGPS.lat,
-            longitude: currentGPS.lng,
-            stationName: stations[0].name,
-            direction: "UP"
-          }} // Center the main train
-          nearbyTrains={[
-            // Front trains (ahead) - DEPARTING
-            {
-              ...trains[0],
-              id: "front-1",
-              label: "DEPARTING",
-              position: 60,
-              color: "#22c55e",
-              latitude: stations[1].coordinates.lat,
-              longitude: stations[1].coordinates.lng,
-              stationName: stations[1].name,
-              direction: "DOWN"
-            }, // +1km (10%)
+      setShowEmergencyDialog(false);
+    }, 4000);
+  };
 
-            // Back trains (behind) - APPROACHING
-            {
-              ...trains[0],
-              id: "back-2",
-              label: "APPROACHING",
-              position: 10,
-              color: "#ef4444",
-              latitude: 10.950, // Hypothetical further back
-              longitude: 76.900,
-              stationName: "Approaching PTJ",
-              direction: "UP"
-            },   // -5km (40%)
-          ]}
-          status={getTrainStatus(trains[0], trains[1])}
-          signalLeft={signals["track-up"].left}
-          signalRight={signals["track-up"].right}
-          onSignalClick={(side) => handleSignalClick("track-up", side)}
-        />
+  return (
+    <div className="h-screen w-screen bg-background text-foreground overflow-hidden flex flex-col p-2">
+      {/* Header */}
+      <div className="mb-1 flex-shrink-0">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-primary/10 rounded-lg">
+            <Train className="w-6 h-6 text-primary" />
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
+            SMART RAIL-TRACKING AND ANTI-COLLISION SYSTEM
+          </h1>
+        </div>
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 flex-1 overflow-hidden min-h-0">
+        {/* Main Track Visualization */}
+        <div className="lg:col-span-2 flex flex-col gap-1 overflow-hidden min-h-0">
+          {/* Railway Tracks */}
+          <Card className="p-2 bg-card border-border flex-shrink-0 overflow-hidden flex flex-col">
+            <div className="space-y-3 flex-1">
+              <MovingTrack
+                name="MAIN TRACK"
+                direction="forward"
+                mainTrain={{
+                  ...trains[0],
+                  position: 50,
+                  latitude: currentGPS.lat,
+                  longitude: currentGPS.lng,
+                  stationName: stations[0].name,
+                  direction: "UP"
+                }} // Center the main train
+                nearbyTrains={[
+                  // Front trains (ahead) - DEPARTING
+                  {
+                    ...trains[0],
+                    id: "front-1",
+                    label: "DEPARTING",
+                    position: 60,
+                    color: "#22c55e",
+                    latitude: stations[1].coordinates.lat,
+                    longitude: stations[1].coordinates.lng,
+                    stationName: stations[1].name,
+                    direction: "DOWN"
+                  }, // +1km (10%)
+
+                  // Back trains (behind) - APPROACHING
+                  {
+                    ...trains[0],
+                    id: "back-2",
+                    label: "APPROACHING",
+                    position: 10,
+                    color: "#ef4444",
+                    latitude: 10.950, // Hypothetical further back
+                    longitude: 76.900,
+                    stationName: "Approaching PTJ",
+                    direction: "UP"
+                  },   // -5km (40%)
+                ]}
+                status={getTrainStatus(trains[0], trains[1])}
+                signalLeft={signals["track-up"].left}
+                signalRight={signals["track-up"].right}
+                onSignalClick={(side) => handleSignalClick("track-up", side)}
+              />
+            </div>
           </Card >
 
-  {/* Analytics Dashboard */ }
-  < div className = "flex-shrink-0 overflow-hidden min-h-0" >
+          {/* Analytics Dashboard */}
+          < div className="flex-shrink-0 overflow-hidden min-h-0" >
             <AnalyticsDashboard
               activeTrains={3}
               avgSpeed={avgSpeed}
@@ -344,8 +367,8 @@ const Index = () => {
           </div >
         </div >
 
-  {/* Right Sidebar - Metrics */ }
-  < div className = "flex flex-col gap-1.5 overflow-hidden" >
+        {/* Right Sidebar - Metrics */}
+        < div className="flex flex-col gap-1.5 overflow-hidden" >
           <SpeedDisplay
             tracks={[
               { direction: "UP", speed: 45, distance: 5 }, // Approaching
@@ -355,7 +378,7 @@ const Index = () => {
           <WeatherTime locationName={stations[0].name} />
           <CollisionAlert isRisk={collisionRiskUp} trainLabel="MAIN TRAIN" />
 
-{/* Previous & Next Train Details */ }
+          {/* Previous & Next Train Details */}
           <Card className="p-1.5 bg-card border-border space-y-1.5">
             <div className="grid grid-cols-2 gap-1.5">
               <div className="bg-muted/50 p-1.5 rounded-md">
@@ -393,34 +416,34 @@ const Index = () => {
         </div >
       </div >
 
-  {/* Emergency Stop Dialog */ }
-  < AlertDialog open = { showEmergencyDialog } onOpenChange = { setShowEmergencyDialog } >
-    <AlertDialogContent>
-      <AlertDialogHeader>
-        <AlertDialogTitle>Select Train to Stop</AlertDialogTitle>
-        <AlertDialogDescription>
-          Choose which train should execute emergency stop procedure.
-        </AlertDialogDescription>
-      </AlertDialogHeader>
-      <div className="space-y-3 my-4">
-        {trains.slice(0, 1).map((train) => (
-          <Button
-            key={train.id}
-            onClick={() => {
-              setSelectedTrain(train.id);
-              handleEmergencyStop(train.id);
-            }}
-            className="w-full h-12 text-lg font-semibold"
-            style={{ backgroundColor: train.color }}
-          >
-            {train.label} - {train.speed} km/h
-          </Button>
-        ))}
-      </div>
-      <AlertDialogFooter>
-        <AlertDialogCancel>Cancel</AlertDialogCancel>
-      </AlertDialogFooter>
-    </AlertDialogContent>
+      {/* Emergency Stop Dialog */}
+      < AlertDialog open={showEmergencyDialog} onOpenChange={setShowEmergencyDialog} >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Select Train to Stop</AlertDialogTitle>
+            <AlertDialogDescription>
+              Choose which train should execute emergency stop procedure.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <div className="space-y-3 my-4">
+            {trains.slice(0, 1).map((train) => (
+              <Button
+                key={train.id}
+                onClick={() => {
+                  setSelectedTrain(train.id);
+                  handleEmergencyStop(train.id);
+                }}
+                className="w-full h-12 text-lg font-semibold"
+                style={{ backgroundColor: train.color }}
+              >
+                {train.label} - {train.speed} km/h
+              </Button>
+            ))}
+          </div>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
       </AlertDialog >
     </div >
   );
