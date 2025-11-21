@@ -49,43 +49,75 @@ const Index = () => {
   });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setTrains(prevTrains => {
-        return prevTrains.map(train => {
-          // Simulate movement for Main Train
-          if (train.id === "train-a") {
-            // Simple oscillation for demo purposes
-            const time = Date.now() / 2000;
-            const basePosition = 50;
-            const movement = Math.sin(time) * 2; // Move slightly
+    // Create WebSocket connection
+    const wsUrl = import.meta.env.VITE_BACKEND_WS || "ws://localhost:8080";
+    const ws = new WebSocket(wsUrl);
 
-            // Calculate new GPS based on position (Interpolation between CBE and CBF)
-            // Assuming position 50 is CBE, and we are moving towards CBF
-            const progress = (Math.sin(time) + 1) / 2; // 0 to 1
-            const startLat = stations[0].coordinates.lat;
-            const endLat = stations[1].coordinates.lat;
-            const startLng = stations[0].coordinates.lng;
-            const endLng = stations[1].coordinates.lng;
+    // When WebSocket opens
+    ws.onopen = () => {
+      console.log("WebSocket connected 👍");
+    };
 
-            const newLat = startLat + (endLat - startLat) * progress;
-            const newLng = startLng + (endLng - startLng) * progress;
+    // When message received from backend
+    ws.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
 
-            // Update the separate GPS state to mimic hardware input
-            setCurrentGPS({ lat: newLat, lng: newLng });
+        // Update current GPS position (for map)
+        if (data.lat && data.lng) {
+          setCurrentGPS({
+            lat: data.lat,
+            lng: data.lng,
+          });
 
-            return {
+          // Update train location + nearest station info
+          setTrains(prev =>
+            prev.map((train) => ({
               ...train,
-              position: basePosition + movement,
-              speed: 80 + Math.random() * 10 - 5, // Fluctuate speed
-            };
-          }
-          return train;
-        });
-      });
-    }, 1000);
+              latitude: data.lat,
+              longitude: data.lng,
+              stationName: data.nearestStation?.name || "Unknown",
+              distance: data.nearestStation?.distance || 0,
+            }))
+          );
+        }
 
-    return () => clearInterval(interval);
+        // Handle Signal Updates
+        if (data.type === 'SIGNAL_UPDATE' && data.signals) {
+          setSignals(data.signals);
+        }
+
+        // Handle Emergency Stop
+        if (data.type === 'EMERGENCY_STOP') {
+          toast({
+            title: "🚨 EMERGENCY STOP RECEIVED",
+            description: `Train ${data.trainId} stopped remotely.`,
+            variant: "destructive",
+          });
+        }
+
+        console.log("Received:", data);
+      } catch (err) {
+        console.error("WebSocket parse error:", err);
+      }
+    };
+
+    // When WebSocket closes
+    ws.onclose = () => {
+      console.log("WebSocket disconnected ❌");
+    };
+
+    // On error
+    ws.onerror = (err) => {
+      console.error("WebSocket error:", err);
+    };
+
+    // Cleanup on unmount
+    return () => {
+      ws.close();
+    };
   }, []);
+
 
   // Calculate if trains are approaching or moving away
   // When hardware updates positions, this will show real-time status
@@ -110,11 +142,20 @@ const Index = () => {
 
 
   const handleSignalClick = (trackId: string, side: "left" | "right") => {
+    const apiUrl = import.meta.env.VITE_BACKEND_API || "http://localhost:8080";
+
     setSignals(prev => {
       const currentSignal = prev[trackId][side];
       const nextSignal =
         currentSignal === "safe" ? "caution" :
           currentSignal === "caution" ? "danger" : "safe";
+
+      // API Call
+      fetch(`${apiUrl}/update-signal`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ trackId, [side]: nextSignal })
+      }).catch(err => console.error("Failed to update signal:", err));
 
       return {
         ...prev,
@@ -134,6 +175,13 @@ const Index = () => {
   const handleEmergencyStop = async (trainId: string) => {
     const train = trains.find(t => t.id === trainId);
     if (!train) return;
+
+    const apiUrl = import.meta.env.VITE_BACKEND_API || "http://localhost:8080";
+    fetch(`${apiUrl}/emergency-stop`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ trainId })
+    }).catch(err => console.error("Failed to trigger emergency stop:", err));
 
     // First notification: Emergency brake initialization
     toast({
