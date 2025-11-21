@@ -7,6 +7,7 @@ import { SignalStatus } from "@/components/SignalStatus";
 
 import { AnalyticsDashboard } from "@/components/AnalyticsDashboard";
 import { CollisionAlert } from "@/components/CollisionAlert";
+import { WeatherTime } from "@/components/WeatherTime";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
 
@@ -146,6 +147,7 @@ const Index = () => {
               { direction: "DOWN", speed: trains[1].speed, distance: trains[1].distance },
             ]} 
           />
+          <WeatherTime />
           <SignalStatus distance={2} />
           <CollisionAlert isRisk={collisionRiskUp} trainLabel="TRAIN UP" />
           <CollisionAlert isRisk={collisionRiskDown} trainLabel="TRAIN DOWN" />
