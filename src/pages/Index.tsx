@@ -299,48 +299,29 @@ const Index = () => {
                   stationName: stations[0].name
                 }} // Center the main train
                 nearbyTrains={[
-                  // Front trains (ahead)
+                  // Front trains (ahead) - DEPARTING
                   {
                     ...trains[0],
                     id: "front-1",
-                    label: "FRONT-1",
+                    label: "DEPARTING",
                     position: 60,
                     color: "#22c55e",
                     latitude: stations[1].coordinates.lat,
                     longitude: stations[1].coordinates.lng,
                     stationName: stations[1].name
                   }, // +1km (10%)
-                  {
-                    ...trains[0],
-                    id: "front-2",
-                    label: "FRONT-2",
-                    position: 80,
-                    color: "#22c55e",
-                    latitude: stations[3].coordinates.lat, // Singanallur
-                    longitude: stations[3].coordinates.lng,
-                    stationName: stations[3].name
-                  }, // +3km (30%)
-                  // Back trains (behind)
-                  {
-                    ...trains[0],
-                    id: "back-1",
-                    label: "BACK-1",
-                    position: 40,
-                    color: "#ef4444",
-                    latitude: stations[2].coordinates.lat, // Podanur
-                    longitude: stations[2].coordinates.lng,
-                    stationName: stations[2].name
-                  },   // -1km (10%)
+
+                  // Back trains (behind) - APPROACHING
                   {
                     ...trains[0],
                     id: "back-2",
-                    label: "BACK-2",
+                    label: "APPROACHING",
                     position: 10,
                     color: "#ef4444",
                     latitude: 10.950, // Hypothetical further back
                     longitude: 76.900,
                     stationName: "Approaching PTJ"
-                  },   // -4km (40%)
+                  },   // -5km (40%)
                 ]}
                 status={getTrainStatus(trains[0], trains[1])}
                 signalLeft={signals["track-up"].left}
@@ -353,6 +334,12 @@ const Index = () => {
           {/* Analytics Dashboard */}
           <div className="flex-1 overflow-hidden min-h-0">
             <AnalyticsDashboard />
+            <Button
+              onClick={() => setShowEmergencyDialog(true)}
+              className="w-full h-9 text-sm font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg flex-shrink-0 mt-2"
+            >
+              EMERGENCY STOP
+            </Button>
           </div>
         </div>
 
@@ -360,7 +347,8 @@ const Index = () => {
         <div className="flex flex-col gap-1.5 overflow-hidden">
           <SpeedDisplay
             tracks={[
-              { direction: "UP", speed: trains[0].speed, distance: trains[0].distance },
+              { direction: "UP", speed: 45, distance: 5 }, // Approaching
+              { direction: "DOWN", speed: 60, distance: 1 }, // Departing
             ]}
           />
           <WeatherTime locationName={stations[0].name} />
@@ -397,13 +385,6 @@ const Index = () => {
               </div>
             </div>
           </Card>
-
-          <Button
-            onClick={() => setShowEmergencyDialog(true)}
-            className="w-full h-9 text-sm font-bold bg-destructive hover:bg-destructive/90 text-destructive-foreground shadow-lg flex-shrink-0"
-          >
-            EMERGENCY STOP
-          </Button>
         </div>
       </div>
 
@@ -436,7 +417,7 @@ const Index = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </div >
   );
 };
 
