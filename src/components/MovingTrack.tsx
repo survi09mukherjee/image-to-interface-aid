@@ -48,7 +48,7 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
       {/* Track Container - Static (No Animation) - Zoomed Out */}
       <div className="flex-1 relative overflow-hidden h-32">
         {/* Static Background Layer */}
-        <div className="absolute inset-0 flex items-center">
+        <div className="absolute inset-0 flex items-center scale-110 origin-center">
           <div className="relative h-3 w-full">
             {/* Rail track - continuous line */}
             <div className="absolute h-3 bg-track rounded-full w-full" />
@@ -98,7 +98,7 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
           >
             <div className="relative">
               <div
-                className="w-10 h-9 rounded-lg flex items-center justify-center shadow-lg border border-white/20"
+                className="w-12 h-10 rounded-lg flex items-center justify-center shadow-lg border border-white/20"
                 style={{ backgroundColor: train.color }}
               >
                 <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -139,7 +139,7 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
           </div>
           <div className="relative">
             <div
-              className="w-16 h-14 rounded-lg flex items-center justify-center shadow-2xl border-2 border-white/20"
+              className="w-20 h-16 rounded-lg flex items-center justify-center shadow-2xl border-2 border-white/20"
               style={{ backgroundColor: mainTrain.color }}
             >
               <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
