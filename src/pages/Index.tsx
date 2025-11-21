@@ -151,11 +151,8 @@ const Index = () => {
           </Card>
 
           {/* Analytics Dashboard */}
-          <div className="flex-1 overflow-hidden min-h-0 flex flex-col">
-            <div className="flex-1 overflow-hidden min-h-0">
-              <AnalyticsDashboard />
-            </div>
-            <CollisionAlert isRisk={collisionRiskUp} trainLabel="MAIN TRAIN (LOCOPILOT)" />
+          <div className="flex-1 overflow-hidden min-h-0">
+            <AnalyticsDashboard />
           </div>
         </div>
 
@@ -167,6 +164,7 @@ const Index = () => {
             ]}
           />
           <WeatherTime />
+          <CollisionAlert isRisk={collisionRiskUp} trainLabel="MAIN TRAIN" />
           <SignalStatus distance={trains[0].distance < trains[1].distance ? trains[0].distance : trains[1].distance} />
           <Button
             onClick={() => setShowEmergencyDialog(true)}
