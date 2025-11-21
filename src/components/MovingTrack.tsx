@@ -46,7 +46,7 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
       </div>
 
       {/* Track Container - Static (No Animation) - Zoomed Out */}
-      <div className="flex-1 relative overflow-hidden h-80">
+      <div className="flex-1 relative overflow-hidden h-48">
         {/* Static Background Layer */}
         <div className="absolute inset-0 flex items-center scale-75 origin-center">
           <div className="relative h-3 w-full">
