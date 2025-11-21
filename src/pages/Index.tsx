@@ -48,6 +48,51 @@ const Index = () => {
     lng: stations[0].coordinates.lng
   });
 
+  // Polling for live backend data
+  useEffect(() => {
+    const API_URL = import.meta.env.VITE_BACKEND_API || "http://localhost:8080";
+
+    const fetchLiveData = async () => {
+      try {
+        const response = await fetch(`${API_URL}/live`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+
+        // Update GPS
+        if (data.currentGPS) {
+          setCurrentGPS({ lat: data.currentGPS.lat, lng: data.currentGPS.lng });
+        }
+
+        // Update train info
+        if (data.currentGPS && data.nearestStation) {
+          setTrains(prev => prev.map(train => ({
+            ...train,
+            latitude: data.currentGPS.lat,
+            longitude: data.currentGPS.lng,
+            stationName: data.nearestStation.name,
+            distance: data.nearestStation.distance
+          })));
+        }
+
+        // Update signals
+        if (data.signals) {
+          setSignals(data.signals);
+        }
+
+      } catch (error) {
+        console.error("Error fetching live data:", error);
+      }
+    };
+
+    // Initial fetch
+    fetchLiveData();
+
+    const interval = setInterval(fetchLiveData, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   useEffect(() => {
     // Create WebSocket connection
     const wsUrl = import.meta.env.VITE_BACKEND_WS || "ws://localhost:8080";
