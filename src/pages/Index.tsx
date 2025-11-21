@@ -201,7 +201,14 @@ const Index = () => {
   const COLLISION_THRESHOLD_KM = 1;
   const collisionRiskUp = trains[0].distance <= COLLISION_THRESHOLD_KM;
   const collisionRiskDown = trains[1].distance <= COLLISION_THRESHOLD_KM;
+  const collisionRiskUp = trains[0].distance <= COLLISION_THRESHOLD_KM;
+  const collisionRiskDown = trains[1].distance <= COLLISION_THRESHOLD_KM;
   const isCollisionRisk = collisionRiskUp || collisionRiskDown;
+
+  // Dashboard Metrics Calculation
+  const avgSpeed = Math.round(trains.reduce((acc, curr) => acc + curr.speed, 0) / trains.length) || 0;
+  const warningCount = isCollisionRisk ? 1 : 0;
+  const systemStatus = isCollisionRisk ? "Warning" : "Normal";
 
 
   const handleSignalClick = (trackId: string, side: "left" | "right") => {
@@ -296,7 +303,8 @@ const Index = () => {
                   position: 50,
                   latitude: currentGPS.lat,
                   longitude: currentGPS.lng,
-                  stationName: stations[0].name
+                  stationName: stations[0].name,
+                  direction: "UP"
                 }} // Center the main train
                 nearbyTrains={[
                   // Front trains (ahead) - DEPARTING
@@ -308,7 +316,8 @@ const Index = () => {
                     color: "#22c55e",
                     latitude: stations[1].coordinates.lat,
                     longitude: stations[1].coordinates.lng,
-                    stationName: stations[1].name
+                    stationName: stations[1].name,
+                    direction: "DOWN"
                   }, // +1km (10%)
 
                   // Back trains (behind) - APPROACHING
@@ -320,7 +329,8 @@ const Index = () => {
                     color: "#ef4444",
                     latitude: 10.950, // Hypothetical further back
                     longitude: 76.900,
-                    stationName: "Approaching PTJ"
+                    stationName: "Approaching PTJ",
+                    direction: "UP"
                   },   // -5km (40%)
                 ]}
                 status={getTrainStatus(trains[0], trains[1])}
@@ -333,7 +343,12 @@ const Index = () => {
 
           {/* Analytics Dashboard */}
           <div className="flex-shrink-0 overflow-hidden min-h-0">
-            <AnalyticsDashboard />
+            <AnalyticsDashboard
+              activeTrains={3}
+              avgSpeed={avgSpeed}
+              warningCount={warningCount}
+              systemStatus={systemStatus}
+            />
             <div className="mt-1 mb-1">
               <SignalStatus
                 distance={trains[0].distance < trains[1].distance ? trains[0].distance : trains[1].distance}

@@ -1,12 +1,19 @@
 import { Card } from "./ui/card";
 import { Activity, TrendingUp, AlertTriangle, CheckCircle2 } from "lucide-react";
 
-export const AnalyticsDashboard = () => {
+interface AnalyticsDashboardProps {
+  activeTrains: number;
+  avgSpeed: number;
+  warningCount: number;
+  systemStatus: "Normal" | "Warning";
+}
+
+export const AnalyticsDashboard = ({ activeTrains, avgSpeed, warningCount, systemStatus }: AnalyticsDashboardProps) => {
   const metrics = [
-    { label: "Active Trains", value: "2", icon: Activity, color: "text-train-a" },
-    { label: "Avg Speed", value: "66 km/h", icon: TrendingUp, color: "text-signal-safe" },
-    { label: "Warnings", value: "0", icon: AlertTriangle, color: "text-accent" },
-    { label: "System Status", value: "Normal", icon: CheckCircle2, color: "text-signal-safe" },
+    { label: "Active Trains", value: activeTrains.toString(), icon: Activity, color: "text-train-a" },
+    { label: "Avg Speed", value: `${avgSpeed} km/h`, icon: TrendingUp, color: "text-signal-safe" },
+    { label: "Warnings", value: warningCount.toString(), icon: AlertTriangle, color: warningCount > 0 ? "text-destructive" : "text-accent" },
+    { label: "System Status", value: systemStatus, icon: CheckCircle2, color: systemStatus === "Normal" ? "text-signal-safe" : "text-destructive" },
   ];
 
   return (

@@ -1,11 +1,12 @@
 import { cn } from "@/lib/utils";
-import { Radio } from "lucide-react";
+import { Radio, ArrowLeft, ArrowRight } from "lucide-react";
 
 interface Train {
   id: string;
   label: string;
   color: string;
   position: number;
+  direction?: "UP" | "DOWN";
   latitude?: number;
   longitude?: number;
   stationName?: string;
@@ -105,6 +106,10 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
                   <path d="M12 2c-4 0-8 0.5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v0.5h2l2-2h4l2 2h2v-0.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-4-4-8-4zM7.5 17c-0.83 0-1.5-0.67-1.5-1.5S6.67 14 7.5 14s1.5 0.67 1.5 1.5S8.33 17 7.5 17zm3.5-7H6V6h5v4zm2 0V6h5v4h-5zm3.5 7c-0.83 0-1.5-0.67-1.5-1.5s0.67-1.5 1.5-1.5 1.5 0.67 1.5 1.5-0.67 1.5-1.5 1.5z" />
                 </svg>
               </div>
+              {/* Direction Arrow */}
+              <div className="absolute -top-5 left-1/2 -translate-x-1/2 text-foreground animate-pulse">
+                {train.direction === "UP" ? <ArrowLeft className="w-4 h-4" /> : <ArrowRight className="w-4 h-4" />}
+              </div>
               {/* Distance Label */}
               <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 bg-background/80 px-1.5 py-1 rounded border border-border shadow-sm z-50">
                 <span className="text-[8px] font-bold text-foreground whitespace-nowrap">
@@ -145,6 +150,10 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
               <svg className="w-10 h-10 text-white" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2c-4 0-8 0.5-8 4v9.5C4 17.43 5.57 19 7.5 19L6 20.5v0.5h2l2-2h4l2 2h2v-0.5L16.5 19c1.93 0 3.5-1.57 3.5-3.5V6c0-3.5-4-4-8-4zM7.5 17c-0.83 0-1.5-0.67-1.5-1.5S6.67 14 7.5 14s1.5 0.67 1.5 1.5S8.33 17 7.5 17zm3.5-7H6V6h5v4zm2 0V6h5v4h-5zm3.5 7c-0.83 0-1.5-0.67-1.5-1.5s0.67-1.5 1.5-1.5 1.5 0.67 1.5 1.5-0.67 1.5-1.5 1.5z" />
               </svg>
+            </div>
+            {/* Direction Arrow */}
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2 text-foreground animate-pulse">
+              {mainTrain.direction === "UP" ? <ArrowLeft className="w-5 h-5" /> : <ArrowRight className="w-5 h-5" />}
             </div>
           </div>
           <div className="text-[10px] font-bold text-foreground bg-background/90 px-2 py-1 rounded border border-border whitespace-nowrap shadow-sm">
