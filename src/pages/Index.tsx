@@ -10,6 +10,7 @@ import { CollisionAlert } from "@/components/CollisionAlert";
 import { WeatherTime } from "@/components/WeatherTime";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "@/hooks/use-toast";
+import { stations } from "@/data/stations";
 
 interface TrainState {
   id: string;
@@ -133,14 +134,56 @@ const Index = () => {
               <MovingTrack
                 name="MAIN TRACK"
                 direction="forward"
-                mainTrain={{ ...trains[0], position: 50 }} // Center the main train
+                mainTrain={{
+                  ...trains[0],
+                  position: 50,
+                  latitude: stations[0].coordinates.lat,
+                  longitude: stations[0].coordinates.lng,
+                  stationName: stations[0].name
+                }} // Center the main train
                 nearbyTrains={[
                   // Front trains (ahead)
-                  { ...trains[0], id: "front-1", label: "FRONT-1", position: 60, color: "#22c55e" }, // +1km (10%)
-                  { ...trains[0], id: "front-2", label: "FRONT-2", position: 80, color: "#22c55e" }, // +3km (30%)
+                  {
+                    ...trains[0],
+                    id: "front-1",
+                    label: "FRONT-1",
+                    position: 60,
+                    color: "#22c55e",
+                    latitude: stations[1].coordinates.lat,
+                    longitude: stations[1].coordinates.lng,
+                    stationName: stations[1].name
+                  }, // +1km (10%)
+                  {
+                    ...trains[0],
+                    id: "front-2",
+                    label: "FRONT-2",
+                    position: 80,
+                    color: "#22c55e",
+                    latitude: stations[3].coordinates.lat, // Singanallur
+                    longitude: stations[3].coordinates.lng,
+                    stationName: stations[3].name
+                  }, // +3km (30%)
                   // Back trains (behind)
-                  { ...trains[0], id: "back-1", label: "BACK-1", position: 40, color: "#ef4444" },   // -1km (10%)
-                  { ...trains[0], id: "back-2", label: "BACK-2", position: 10, color: "#ef4444" },   // -4km (40%)
+                  {
+                    ...trains[0],
+                    id: "back-1",
+                    label: "BACK-1",
+                    position: 40,
+                    color: "#ef4444",
+                    latitude: stations[2].coordinates.lat, // Podanur
+                    longitude: stations[2].coordinates.lng,
+                    stationName: stations[2].name
+                  },   // -1km (10%)
+                  {
+                    ...trains[0],
+                    id: "back-2",
+                    label: "BACK-2",
+                    position: 10,
+                    color: "#ef4444",
+                    latitude: 10.950, // Hypothetical further back
+                    longitude: 76.900,
+                    stationName: "Approaching PTJ"
+                  },   // -4km (40%)
                 ]}
                 status={getTrainStatus(trains[0], trains[1])}
                 signalLeft={signals["track-up"].left}

@@ -6,6 +6,9 @@ interface Train {
   label: string;
   color: string;
   position: number;
+  latitude?: number;
+  longitude?: number;
+  stationName?: string;
 }
 
 interface MovingTrackProps {
@@ -103,8 +106,18 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
                 </svg>
               </div>
               {/* Distance Label */}
-              <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[9px] font-bold text-muted-foreground whitespace-nowrap bg-background/80 px-1 rounded">
-                {Math.abs(train.position - mainTrain.position) > 0 ? `${Math.abs((train.position - mainTrain.position) / 10).toFixed(1)} km` : ''}
+              <div className="absolute -bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-0.5 bg-background/80 px-1.5 py-1 rounded border border-border shadow-sm z-50">
+                <span className="text-[9px] font-bold text-foreground whitespace-nowrap">
+                  {Math.abs(train.position - mainTrain.position) > 0 ? `${Math.abs((train.position - mainTrain.position) / 10).toFixed(1)} km` : ''}
+                </span>
+                {train.stationName && (
+                  <span className="text-[8px] text-muted-foreground whitespace-nowrap">{train.stationName}</span>
+                )}
+                {train.latitude && (
+                  <span className="text-[7px] text-muted-foreground whitespace-nowrap">
+                    {train.latitude.toFixed(3)}°N, {train.longitude?.toFixed(3)}°E
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -118,7 +131,10 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
           <div className="px-3 py-1 bg-card/95 rounded border border-border shadow-lg">
             <div className="flex flex-col items-center gap-0.5">
               <span className="font-bold text-foreground text-sm whitespace-nowrap">{mainTrain.label}</span>
-              <span className="text-[10px] text-muted-foreground">Status: Active</span>
+              <div className="flex flex-col items-center text-[9px] text-muted-foreground">
+                <span>{mainTrain.stationName}</span>
+                <span>{mainTrain.latitude?.toFixed(3)}°N, {mainTrain.longitude?.toFixed(3)}°E</span>
+              </div>
             </div>
           </div>
           <div className="relative">
