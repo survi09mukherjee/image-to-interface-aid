@@ -1,51 +1,32 @@
-import { Card } from "@/components/ui/card";
+import { Card } from "./ui/card";
 
 interface SignalStatusProps {
   distance: number;
   status: "safe" | "caution" | "danger";
 }
 
-const SignalStatus = ({ distance, status }: SignalStatusProps) => {
-  const getStatusColor = () => {
-    switch (status) {
-      case "safe":
-        return "bg-success";
-      case "caution":
-        return "bg-accent";
-      case "danger":
-        return "bg-destructive";
-      default:
-        return "bg-success";
-    }
-  };
-
+export const SignalStatus = ({ distance, status }: SignalStatusProps) => {
   return (
-    <Card className="p-6 bg-card border-border">
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-muted-foreground uppercase tracking-wider">
-          Signal Status
-        </h3>
-        <div className="flex items-center gap-4">
-          <div
-            className={`w-16 h-16 ${getStatusColor()} rounded-full shadow-lg`}
-            style={{
-              boxShadow: `0 0 20px ${
-                status === "safe"
-                  ? "hsl(var(--success))"
-                  : status === "caution"
-                  ? "hsl(var(--accent))"
-                  : "hsl(var(--destructive))"
-              }`,
-            }}
-          />
-          <div>
-            <p className="text-sm text-muted-foreground">Next Signal</p>
-            <p className="text-2xl font-bold text-foreground">{distance} KM</p>
-          </div>
+    <Card className="p-2 bg-card border-border">
+      <h3 className="text-[10px] font-medium text-muted-foreground tracking-wider mb-2">NEXT SIGNAL</h3>
+      <div className="flex items-center justify-between">
+        {/* Traffic Light Visual */}
+        <div className="bg-black/80 p-1.5 rounded-lg border border-gray-700 flex gap-1.5 shadow-inner">
+          {/* Red Light */}
+          <div className={`w-6 h-6 rounded-full border border-red-900 transition-all duration-300 ${status === 'danger' ? 'bg-red-500 shadow-[0_0_10px_rgba(239,68,68,0.8)] scale-110' : 'bg-red-900/30'}`} />
+
+          {/* Yellow Light */}
+          <div className={`w-6 h-6 rounded-full border border-yellow-900 transition-all duration-300 ${status === 'caution' ? 'bg-yellow-500 shadow-[0_0_10px_rgba(234,179,8,0.8)] scale-110' : 'bg-yellow-900/30'}`} />
+
+          {/* Green Light */}
+          <div className={`w-6 h-6 rounded-full border border-green-900 transition-all duration-300 ${status === 'safe' ? 'bg-green-500 shadow-[0_0_10px_rgba(34,197,94,0.8)] scale-110' : 'bg-green-900/30'}`} />
+        </div>
+
+        <div className="text-right">
+          <p className="text-[10px] text-muted-foreground">Distance</p>
+          <p className="text-lg font-bold text-foreground leading-tight">{distance} KM</p>
         </div>
       </div>
     </Card>
   );
 };
-
-export default SignalStatus;

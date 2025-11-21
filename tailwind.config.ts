@@ -31,14 +31,6 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
-        success: {
-          DEFAULT: "hsl(var(--success))",
-          foreground: "hsl(var(--success-foreground))",
-        },
-        track: {
-          rail: "hsl(var(--track-rail))",
-          bg: "hsl(var(--track-bg))",
-        },
         muted: {
           DEFAULT: "hsl(var(--muted))",
           foreground: "hsl(var(--muted-foreground))",
@@ -55,16 +47,18 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        sidebar: {
-          DEFAULT: "hsl(var(--sidebar-background))",
-          foreground: "hsl(var(--sidebar-foreground))",
-          primary: "hsl(var(--sidebar-primary))",
-          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
-          accent: "hsl(var(--sidebar-accent))",
-          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
-          border: "hsl(var(--sidebar-border))",
-          ring: "hsl(var(--sidebar-ring))",
-        },
+        "train-a": "hsl(var(--train-a))",
+        "train-b": "hsl(var(--train-b))",
+        "train-c": "hsl(var(--train-c))",
+        "rfid-active": "hsl(var(--rfid-active))",
+        "rfid-passive": "hsl(var(--rfid-passive))",
+        "signal-safe": "hsl(var(--signal-safe))",
+        "signal-stop": "hsl(var(--signal-stop))",
+        station: "hsl(var(--station))",
+        cabin: "hsl(var(--cabin))",
+        track: "hsl(var(--track))",
+        "alert-bg": "hsl(var(--alert-bg))",
+        "alert-text": "hsl(var(--alert-text))",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -88,10 +82,28 @@ export default {
             height: "0",
           },
         },
+        "track-forward": {
+          "0%": {
+            transform: "translateX(0)",
+          },
+          "100%": {
+            transform: "translateX(-50%)",
+          },
+        },
+        "track-backward": {
+          "0%": {
+            transform: "translateX(-50%)",
+          },
+          "100%": {
+            transform: "translateX(0)",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        "track-forward": "track-forward 40s linear infinite",
+        "track-backward": "track-backward 40s linear infinite",
       },
     },
   },

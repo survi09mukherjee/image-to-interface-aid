@@ -1,45 +1,26 @@
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Card } from "./ui/card";
 
 interface TrainDistance {
-  id: string;
-  distance: number;
+  trainId: number;
+  distance: string;
 }
 
 interface CommunicationPanelProps {
   trains: TrainDistance[];
-  onEmergencyStop: () => void;
 }
 
-const CommunicationPanel = ({ trains, onEmergencyStop }: CommunicationPanelProps) => {
+export const CommunicationPanel = ({ trains }: CommunicationPanelProps) => {
   return (
     <Card className="p-6 bg-card border-border">
-      <div className="space-y-4">
-        <h3 className="text-lg font-semibold text-muted-foreground uppercase tracking-wider">
-          Communication
-        </h3>
-        <div className="space-y-2">
-          {trains.map((train) => (
-            <div
-              key={train.id}
-              className="flex items-center justify-between bg-secondary px-4 py-3 rounded-lg"
-            >
-              <span className="text-lg font-semibold text-foreground">TRAIN {train.id}</span>
-              <span className="text-lg text-muted-foreground">&lt; {train.distance} KM</span>
-            </div>
-          ))}
-        </div>
-        <Button
-          onClick={onEmergencyStop}
-          variant="destructive"
-          size="lg"
-          className="w-full h-14 text-xl font-bold uppercase tracking-wider"
-        >
-          Emergency Stop
-        </Button>
+      <h3 className="text-sm font-medium text-muted-foreground tracking-wider mb-4">COMMUNICATION</h3>
+      <div className="space-y-3">
+        {trains.map((train) => (
+          <div key={train.trainId} className="flex items-center justify-between py-2 px-3 bg-secondary/50 rounded">
+            <span className="text-foreground font-semibold">TRAIN {train.trainId}</span>
+            <span className="text-muted-foreground">{train.distance}</span>
+          </div>
+        ))}
       </div>
     </Card>
   );
 };
-
-export default CommunicationPanel;
