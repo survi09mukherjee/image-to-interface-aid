@@ -274,19 +274,19 @@ const Index = () => {
   };
 
   return (
-    <div className="h-screen w-screen bg-background text-foreground overflow-hidden flex flex-col p-3">
+    <div className="h-screen w-screen bg-background text-foreground overflow-hidden flex flex-col p-2">
       {/* Header */}
-      <div className="mb-3 flex-shrink-0">
+      <div className="mb-1 flex-shrink-0">
         <h1 className="text-xl font-bold text-center tracking-wider">
           SMART RAIL-TRACKING AND ANTI-COLLISION SYSTEM
         </h1>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 flex-1 overflow-hidden min-h-0">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 flex-1 overflow-hidden min-h-0">
         {/* Main Track Visualization */}
-        <div className="lg:col-span-2 flex flex-col gap-2 overflow-hidden min-h-0">
+        <div className="lg:col-span-2 flex flex-col gap-1 overflow-hidden min-h-0">
           {/* Railway Tracks */}
-          <Card className="p-4 bg-card border-border flex-shrink-0">
+          <Card className="p-2 bg-card border-border flex-shrink-0">
             <div className="space-y-3">
               <MovingTrack
                 name="MAIN TRACK"
@@ -356,7 +356,7 @@ const Index = () => {
           <SignalStatus distance={trains[0].distance < trains[1].distance ? trains[0].distance : trains[1].distance} />
 
           {/* Previous & Next Train Details */}
-          <Card className="p-3 bg-card border-border space-y-2">
+          <Card className="p-2 bg-card border-border space-y-2">
             <h3 className="font-bold text-sm text-muted-foreground uppercase tracking-wider">Schedule Info</h3>
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-muted/50 p-2 rounded-md">

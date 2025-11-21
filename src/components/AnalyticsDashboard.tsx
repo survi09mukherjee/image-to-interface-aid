@@ -10,7 +10,7 @@ export const AnalyticsDashboard = () => {
   ];
 
   return (
-    <Card className="p-3 bg-card border-border">
+    <Card className="p-2 bg-card border-border">
       <h3 className="text-xs font-medium text-muted-foreground tracking-wider mb-2">ANALYTICS DASHBOARD</h3>
 
       <div className="grid grid-cols-2 gap-2">
