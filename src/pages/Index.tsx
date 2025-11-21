@@ -371,7 +371,7 @@ const Index = () => {
             ]}
           />
           <WeatherTime locationName={stations[0].name} />
-          <CollisionAlert isRisk={collisionRiskUp} trainLabel="MAIN TRAIN" />
+          <CollisionAlert isRisk={isCollisionRisk} trainLabel="MAIN TRAIN" />
 
           {/* Previous & Next Train Details */}
           <Card className="p-1.5 bg-card border-border space-y-1.5">
