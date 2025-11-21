@@ -147,7 +147,7 @@ export const MovingTrack = ({ name, direction, mainTrain, nearbyTrains, status, 
               </svg>
             </div>
           </div>
-          <div className="text-[11px] font-semibold text-foreground bg-background/80 px-2 py-0.5 rounded border border-border">
+          <div className="text-[10px] font-bold text-foreground bg-background/90 px-2 py-1 rounded border border-border whitespace-nowrap shadow-sm">
             {status}
           </div>
         </div>
