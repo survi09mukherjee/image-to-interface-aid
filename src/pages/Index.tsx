@@ -367,7 +367,7 @@ const Index = () => {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <div className="space-y-3 my-4">
-            {trains.map((train) => (
+            {trains.slice(0, 1).map((train) => (
               <Button
                 key={train.id}
                 onClick={() => {
